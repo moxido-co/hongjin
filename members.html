@@ -2,16 +2,65 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="description" content="Member Dashboard for Red Gold.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Member Dashboard</title>
+  <title>Red Gold Member Dashboard</title>
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Firebase v9 Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyApKhkDkBJf9iG6fV3oAygXs43nYHDaWoI",
+      authDomain: "hongjin-0.firebaseapp.com",
+      projectId: "hongjin-0",
+      storageBucket: "hongjin-0.firebasestorage.app",
+      messagingSenderId: "824277571576",
+      appId: "1:824277571576:web:3e6fe83d23e66f823d280d",
+      measurementId: "G-Q8WCC2R9BY"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+  </script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 800px; }
+    .offer { background: #f8f9fa; border-radius: 5px; }
+    .offer img { max-height: 300px; object-fit: cover; }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <h2>Member Dashboard</h2>
-    <p>Welcome, valued member! This is your dashboard where you can view your booking history and see exclusive offers.</p>
-    <a href="login.html" class="btn btn-secondary">Logout</a>
-  </div>
+  <header class="bg-secondary text-white text-center py-3">
+    <h1>Member Dashboard - Red Gold</h1>
+  </header>
+  <main class="container my-5">
+    <p>Welcome, valued member! Here you can view exclusive offers from Red Gold.</p>
+    <div id="offersList"></div>
+    <a href="login.html" class="btn btn-secondary mt-3">Logout</a>
+  </main>
+  <footer class="bg-light text-center py-3">
+    <p>&copy; 2025 Red Gold</p>
+  </footer>
+  <script>
+    db.collection('offers').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+      var offersList = document.getElementById('offersList');
+      offersList.innerHTML = '';
+      snapshot.forEach(doc => {
+        var offer = doc.data();
+        var offerDiv = document.createElement('div');
+        offerDiv.classList.add('offer', 'mb-4', 'p-3', 'border');
+        var offerHtml = '<h3>' + offer.title + '</h3>';
+        offerHtml += '<p>' + offer.details + '</p>';
+        if (offer.imageUrl) {
+          offerHtml += '<img src="' + offer.imageUrl + '" alt="Offer Image" class="img-fluid rounded mt-2">';
+        }
+        offerDiv.innerHTML = offerHtml;
+        offersList.appendChild(offerDiv);
+      });
+    });
+  </script>
 </body>
 </html>
-
