@@ -2,38 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="description" content="Staff Login for Red Gold Management.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staff Login</title>
+  <title>Red Gold Staff Login</title>
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Firebase v9 Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyApKhkDkBJf9iG6fV3oAygXs43nYHDaWoI",
+      authDomain: "hongjin-0.firebaseapp.com",
+      projectId: "hongjin-0",
+      storageBucket: "hongjin-0.firebasestorage.app",
+      messagingSenderId: "824277571576",
+      appId: "1:824277571576:web:3e6fe83d23e66f823d280d",
+      measurementId: "G-Q8WCC2R9BY"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+  </script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 400px; }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <h2>Staff Login</h2>
+  <main class="container my-5">
+    <h2 class="mb-4 text-center">Staff Login</h2>
     <form id="staffLoginForm">
       <div class="form-group">
-        <label for="staffUsername">Username</label>
-        <input type="text" id="staffUsername" class="form-control" placeholder="Enter staff username">
+        <label for="staffUsername">Email</label>
+        <input type="email" id="staffUsername" class="form-control" placeholder="Enter staff email" required>
       </div>
       <div class="form-group">
         <label for="staffPassword">Password</label>
-        <input type="password" id="staffPassword" class="form-control" placeholder="Enter staff password">
+        <input type="password" id="staffPassword" class="form-control" placeholder="Enter staff password" required>
       </div>
-      <button type="submit" class="btn btn-primary">Login</button>
+      <button type="submit" class="btn btn-primary btn-block">Login</button>
     </form>
-  </div>
+  </main>
   <script>
     document.getElementById('staffLoginForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      // Dummy credentials for staff login:
-      const username = document.getElementById('staffUsername').value;
-      const password = document.getElementById('staffPassword').value;
-      if(username === "staff" && password === "staffpass") {
-        window.location.href = "management.html";
-      } else {
-        alert("Invalid staff credentials!");
-      }
+      var email = document.getElementById('staffUsername').value;
+      var password = document.getElementById('staffPassword').value;
+      auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+          // Optionally, verify the user's role before redirecting.
+          window.location.href = 'management.html';
+        })
+        .catch((error) => {
+          alert('Error: ' + error.message);
+        });
     });
   </script>
 </body>
 </html>
-
