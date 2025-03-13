@@ -15,7 +15,7 @@
 <body>
   <main class="container my-5">
     <h2 class="mb-4 text-center">Admin Login</h2>
-    <form id="adminLoginForm">
+    <form id="adminLoginForm" aria-label="Admin Login Form">
       <div class="form-group">
         <label for="adminEmail">Admin Email</label>
         <input type="email" id="adminEmail" class="form-control" placeholder="Enter admin email" required>
@@ -28,7 +28,7 @@
     </form>
   </main>
   <script>
-    // Hard-coded admin credentials
+    // Hardcoded admin credentials for demonstration
     const ADMIN_EMAIL = "admin@redgold.com";
     const ADMIN_PASSWORD = "admin123";
     document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
@@ -36,11 +36,11 @@
       const email = document.getElementById('adminEmail').value;
       const password = document.getElementById('adminPassword').value;
       if(email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-        // Store admin flag in sessionStorage
+        // Store admin flag (for demo; in production, use a secure method)
         sessionStorage.setItem("isAdmin", "true");
         window.location.href = "staff-signup.html";
       } else {
-        alert("Invalid admin credentials.");
+        showError("Invalid admin credentials.");
       }
     });
   </script>
