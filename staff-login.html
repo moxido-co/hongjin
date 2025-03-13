@@ -1,1 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Staff Login</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container my-5">
+    <h2>Staff Login</h2>
+    <form id="staffLoginForm">
+      <div class="form-group">
+        <label for="staffUsername">Username</label>
+        <input type="text" id="staffUsername" class="form-control" placeholder="Enter staff username">
+      </div>
+      <div class="form-group">
+        <label for="staffPassword">Password</label>
+        <input type="password" id="staffPassword" class="form-control" placeholder="Enter staff password">
+      </div>
+      <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+  </div>
+  <script>
+    document.getElementById('staffLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // Dummy credentials for staff login:
+      const username = document.getElementById('staffUsername').value;
+      const password = document.getElementById('staffPassword').value;
+      if(username === "staff" && password === "staffpass") {
+        window.location.href = "management.html";
+      } else {
+        alert("Invalid staff credentials!");
+      }
+    });
+  </script>
+</body>
+</html>
 
