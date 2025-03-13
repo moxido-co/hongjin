@@ -7,25 +7,12 @@
   <title>Red Gold Member Login</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Firebase v9 Compat SDKs -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
-  <script>
-    // Firebase client configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyApKhkDkBJf9iG6fV3oAygXs43nYHDaWoI",
-      authDomain: "hongjin-0.firebaseapp.com",
-      projectId: "hongjin-0",
-      storageBucket: "hongjin-0.firebasestorage.app",
-      messagingSenderId: "824277571576",
-      appId: "1:824277571576:web:3e6fe83d23e66f823d280d",
-      measurementId: "G-Q8WCC2R9BY"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
-  </script>
+  <!-- Common configuration -->
+  <script src="common.js"></script>
   <style>
     body { font-family: Arial, sans-serif; }
     .container { max-width: 400px; }
@@ -34,14 +21,14 @@
 <body>
   <main class="container my-5">
     <h2 class="mb-4 text-center">Member Login</h2>
-    <form id="loginForm">
+    <form id="loginForm" aria-label="Member Login Form">
       <div class="form-group">
         <label for="username">Email</label>
-        <input type="email" id="username" class="form-control" placeholder="Enter email" required>
+        <input type="email" id="username" class="form-control" placeholder="Enter email" required aria-required="true">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input type="password" id="password" class="form-control" placeholder="Enter password" required>
+        <input type="password" id="password" class="form-control" placeholder="Enter password" required aria-required="true">
       </div>
       <button type="submit" class="btn btn-primary btn-block">Login</button>
     </form>
@@ -50,11 +37,10 @@
   <script>
     document.getElementById('loginForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      var email = document.getElementById('username').value;
-      var password = document.getElementById('password').value;
+      const email = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
       auth.signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
-          // Retrieve user role from Firestore
           return db.collection('users').doc(userCredential.user.uid).get();
         })
         .then((doc) => {
@@ -63,13 +49,13 @@
             if (userData.role === 'member') {
               window.location.href = 'members.html';
             } else {
-              alert('Unauthorized: Staff should log in via the Staff Login page.');
+              showError("Unauthorized: Staff must use the Staff Login page.");
               auth.signOut();
             }
           }
         })
         .catch((error) => {
-          alert('Error: ' + error.message);
+          showError(error.message);
         });
     });
   </script>
