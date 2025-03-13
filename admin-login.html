@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="description" content="Admin Login for Red Gold.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Red Gold Admin Login</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 400px; }
+  </style>
+</head>
+<body>
+  <main class="container my-5">
+    <h2 class="mb-4 text-center">Admin Login</h2>
+    <form id="adminLoginForm">
+      <div class="form-group">
+        <label for="adminEmail">Admin Email</label>
+        <input type="email" id="adminEmail" class="form-control" placeholder="Enter admin email" required>
+      </div>
+      <div class="form-group">
+        <label for="adminPassword">Admin Password</label>
+        <input type="password" id="adminPassword" class="form-control" placeholder="Enter admin password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Login as Admin</button>
+    </form>
+  </main>
+  <script>
+    // Hard-coded admin credentials
+    const ADMIN_EMAIL = "admin@redgold.com";
+    const ADMIN_PASSWORD = "admin123";
+    document.getElementById('adminLoginForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email = document.getElementById('adminEmail').value;
+      const password = document.getElementById('adminPassword').value;
+      if(email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        // Store admin flag in sessionStorage
+        sessionStorage.setItem("isAdmin", "true");
+        window.location.href = "staff-signup.html";
+      } else {
+        alert("Invalid admin credentials.");
+      }
+    });
+  </script>
+</body>
+</html>
