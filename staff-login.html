@@ -7,22 +7,12 @@
   <title>Red Gold Staff Login</title>
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <!-- Firebase v9 Compat SDKs -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyApKhkDkBJf9iG6fV3oAygXs43nYHDaWoI",
-      authDomain: "hongjin-0.firebaseapp.com",
-      projectId: "hongjin-0",
-      storageBucket: "hongjin-0.firebasestorage.app",
-      messagingSenderId: "824277571576",
-      appId: "1:824277571576:web:3e6fe83d23e66f823d280d",
-      measurementId: "G-Q8WCC2R9BY"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-  </script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+  <!-- Common configuration -->
+  <script src="common.js"></script>
   <style>
     body { font-family: Arial, sans-serif; }
     .container { max-width: 400px; }
@@ -31,7 +21,7 @@
 <body>
   <main class="container my-5">
     <h2 class="mb-4 text-center">Staff Login</h2>
-    <form id="staffLoginForm">
+    <form id="staffLoginForm" aria-label="Staff Login Form">
       <div class="form-group">
         <label for="staffUsername">Email</label>
         <input type="email" id="staffUsername" class="form-control" placeholder="Enter staff email" required>
@@ -42,19 +32,30 @@
       </div>
       <button type="submit" class="btn btn-primary btn-block">Login</button>
     </form>
+    <p class="mt-3 text-center">Don't have an account? Please contact admin for registration.</p>
   </main>
   <script>
     document.getElementById('staffLoginForm').addEventListener('submit', function(e) {
       e.preventDefault();
-      var email = document.getElementById('staffUsername').value;
-      var password = document.getElementById('staffPassword').value;
+      const email = document.getElementById('staffUsername').value;
+      const password = document.getElementById('staffPassword').value;
       auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
-          // Optionally, verify the user's role before redirecting.
-          window.location.href = 'management.html';
+        .then((userCredential) => {
+          return db.collection('users').doc(userCredential.user.uid).get();
+        })
+        .then((doc) => {
+          if (doc.exists) {
+            const userData = doc.data();
+            if (userData.role === 'staff') {
+              window.location.href = 'management.html';
+            } else {
+              showError("Unauthorized: Members should use the Member Login page.");
+              auth.signOut();
+            }
+          }
         })
         .catch((error) => {
-          alert('Error: ' + error.message);
+          showError(error.message);
         });
     });
   </script>
