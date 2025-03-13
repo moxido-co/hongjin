@@ -2,16 +2,96 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="description" content="Staff Management Dashboard for Red Gold.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staff Management Dashboard</title>
+  <title>Red Gold Management Dashboard</title>
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- Firebase v9 Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.17.2/firebase-storage-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyApKhkDkBJf9iG6fV3oAygXs43nYHDaWoI",
+      authDomain: "hongjin-0.firebaseapp.com",
+      projectId: "hongjin-0",
+      storageBucket: "hongjin-0.firebasestorage.app",
+      messagingSenderId: "824277571576",
+      appId: "1:824277571576:web:3e6fe83d23e66f823d280d",
+      measurementId: "G-Q8WCC2R9BY"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+  </script>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .container { max-width: 600px; }
+  </style>
 </head>
 <body>
-  <div class="container my-5">
-    <h2>Staff Management Dashboard</h2>
-    <p>Welcome, Staff! Here you can manage bookings, users, and site content.</p>
-    <a href="staff-login.html" class="btn btn-secondary">Logout</a>
-  </div>
+  <header class="bg-dark text-white text-center py-3">
+    <h1>Red Gold Management Dashboard</h1>
+  </header>
+  <main class="container my-5">
+    <p>Welcome, Staff! Post new offers for members below.</p>
+    <form id="offerForm">
+      <div class="form-group">
+        <label for="offerTitle">Offer Title</label>
+        <input type="text" id="offerTitle" class="form-control" placeholder="Enter offer title" required>
+      </div>
+      <div class="form-group">
+        <label for="offerDetails">Offer Details</label>
+        <textarea id="offerDetails" class="form-control" placeholder="Enter offer details" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="offerImage">Offer Image (optional)</label>
+        <input type="file" id="offerImage" class="form-control-file">
+      </div>
+      <button type="submit" class="btn btn-primary">Post Offer</button>
+    </form>
+    <a href="staff-login.html" class="btn btn-secondary mt-3">Logout</a>
+  </main>
+  <footer class="bg-light text-center py-3">
+    <p>&copy; 2025 Red Gold</p>
+  </footer>
+  <script>
+    document.getElementById('offerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var title = document.getElementById('offerTitle').value;
+      var details = document.getElementById('offerDetails').value;
+      var file = document.getElementById('offerImage').files[0];
+      
+      function saveOffer(imageUrl = '') {
+        db.collection('offers').add({
+          title: title,
+          details: details,
+          imageUrl: imageUrl,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        })
+        .then(() => {
+          alert('Offer posted successfully!');
+          document.getElementById('offerForm').reset();
+        })
+        .catch((error) => {
+          alert('Error posting offer: ' + error.message);
+        });
+      }
+      
+      if (file) {
+        var storageRef = storage.ref('offerImages/' + file.name);
+        storageRef.put(file).then(() => {
+          storageRef.getDownloadURL().then((url) => {
+            saveOffer(url);
+          });
+        });
+      } else {
+        saveOffer();
+      }
+    });
+  </script>
 </body>
 </html>
-
